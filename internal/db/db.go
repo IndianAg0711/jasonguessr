@@ -1,19 +1,25 @@
 package db
 
 import (
-	"database/sql"
+	"context"
+	"fmt"
+
+	"github.com/jackc/pgx/v5"
 )
 
-var dbInstance *sql.DB
+var pgxConn *pgx.Conn
 
-func GetInstance() *sql.DB {
-	if dbInstance != nil {
-		return dbInstance
+func GetInstance() (*pgx.Conn, error) {
+	if pgxConn != nil {
+		return pgxConn, nil
 	}
 
 	// This is dummy data
-	connStr := "user=myuser dbname=mydb password=mypassword sslmode=disable"
-	dbInstance, _ := sql.Open("postgres", connStr)
+	connStr := "user=postgres dbname=jasonguessr password= sslmode=disable"
+	pgxConn, err := pgx.Connect(context.Background(), connStr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open db connection: %w", err)
+	}
 
-	return dbInstance
+	return pgxConn, nil
 }

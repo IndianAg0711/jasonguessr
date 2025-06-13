@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/IndianAg0711/jasonguessr/internal/db"
 	"github.com/go-chi/chi/v5"
-	"github.com/golang-migrate/migrate/v4"
 )
 
 func main() {
 	fmt.Println("Hello, World!")
+
+	// run any pending db migrations
+	db.Migrate()
+
 	r := chi.NewRouter()
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		res, _ := json.Marshal("welcome")
